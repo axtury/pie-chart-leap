@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var width = 960,
+    height = 500;
+
+var arc = d3.svg.arc()
+    .outerRadius(Math.min(width, height) / 2 - 10)
+    .innerRadius(Math.min(width, height) / 2 - 50);
+
+var pie = d3.layout.pie()
+    .value(function(d) { return d.population; });
+
+d3.tsv("data.tsv", function(error, data) {
+
+  data.forEach(function(d) {
+    d.population = +d.population;
+  });
+
+  var g = svg.selectAll(".arc")
+      .data(pie(data))
+    .enter().append("g")
+      .attr("class", "arc");
+
+  g.append("path")
+      .attr("d", arc)
+      .style("fill", function(d) { return color(d.data.age); });
+
+});
+
+</script>
