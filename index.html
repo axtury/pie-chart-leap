@@ -18,6 +18,7 @@ var arc = d3.svg.arc()
     .innerRadius(Math.min(width, height) / 2 - 70);
 
 var pie = d3.layout.pie()
+    .sort(null)
     .value(function(d) { return d.population; });
 
 var svg = d3.select("body").append("svg")
