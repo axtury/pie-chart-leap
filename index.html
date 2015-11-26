@@ -2,8 +2,9 @@
 <meta charset="utf-8">
 <style>
 
-body {
+.arc text {
   font: 10px sans-serif;
+  text-anchor: middle;
 }
 
 .arc path {
@@ -26,6 +27,10 @@ var arc = d3.svg.arc()
     .outerRadius(radius - 10)
     .innerRadius(0);
 
+var labelArc = d3.svg.arc()
+    .outerRadius(radius - 40)
+    .innerRadius(radius - 40);
+
 var pie = d3.layout.pie()
     .sort(null)
     .value(function(d) { return d.population; });
@@ -36,11 +41,8 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-d3.csv("data.csv", function(error, data) {
-
-  data.forEach(function(d) {
-    d.population = +d.population;
-  });
+d3.csv("data.csv", type, function(error, data) {
+  if (error) throw error;
 
   var g = svg.selectAll(".arc")
       .data(pie(data))
@@ -52,11 +54,14 @@ d3.csv("data.csv", function(error, data) {
       .style("fill", function(d) { return color(d.data.age); });
 
   g.append("text")
-      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+      .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
       .attr("dy", ".35em")
-      .style("text-anchor", "middle")
       .text(function(d) { return d.data.age; });
-
 });
+
+function type(d) {
+  d.population = +d.population;
+  return d;
+}
 
 </script>
